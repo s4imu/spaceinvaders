@@ -119,11 +119,11 @@ class Invader {
             this.height)
 
     }
-    update(){
+    update({ velocity }){
         if(this.image){
             this.draw()
-            this.position.x += this.velocity.x
-            this.position.y += this.velocity.y
+            this.position.x += velocity.x
+            this.position.y += velocity.y
         }
     }    
 }
@@ -135,15 +135,18 @@ class Grid {
             y:0
         }
         this.velocity = {
-            x: 0,
+            x: 3,
             y: 0
         }
         //desenha o grid na tela
         this.invaders = []
         
-        const rows = Math.floor(Math.random() * 5)
+        const rows = Math.floor(Math.random() * 10 + 2)
+        const columns = Math.floor(Math.random() * 5 + 2)
 
-        for(let x = 0; x<10; x++){
+        this.width = columns * 30
+
+        for(let x = 0; x<columns; x++){
             for(let y = 0; y<rows; y++){
                 this.invaders.push(
                     new Invader({
@@ -156,11 +159,15 @@ class Grid {
             }
         }
     }
-    draw(){
-
-    }
     update(){
+        this.position.x += this.velocity.x
+        this.position.y += this.velocity.y
 
+        this.velocity.y = 0
+        if(this.position.x + this.width >= canvas.width || this.position.x <=0){
+            this.velocity.x = -this.velocity.x
+            this.velocity.y += 30
+        }
     }
 }
 
@@ -178,6 +185,9 @@ const keys = {
         pressed: false
     }
 }
+
+let frames = 0
+let randomInterval = Math.floor((Math.random() * 500) + 500)
 
 //Carrega os elementos do jogo na tela
 function animate(){
@@ -197,8 +207,27 @@ function animate(){
 
     grids.forEach(grid => {
         grid.update()
-        grid.invaders.forEach(invader => {
-            invader.update()
+        grid.invaders.forEach((invader, i) => {
+            invader.update({ velocity: grid.velocity })
+        
+            projectiles.forEach((projectile, j) => {
+                if(
+                    projectile.position.y - projectile.radius 
+                    <= invader.position.y + invader.height &&
+                    projectile.position.x + projectile.radius >=
+                    invader.position.x && projectile.position.x -
+                    projectile.radius <=invader.position.x && projectile.position.y
+                    + projectile.radius >= invader.position) {
+                    setTimeout(() =>{
+                        const invaderFound = grid.invaders.find((invader2) => invader2 === invader)
+                        const projectileFound = projectiles.find((projectile2) => projectile2 === projectile)
+                        if(invaderFound && projectileFound){
+                            grid.invaders.splice(i,1)
+                            projectiles.splice(j,1)
+                        }
+                    }, 0)
+                }
+            })
         })
     })
 
@@ -213,6 +242,13 @@ function animate(){
         player.velocity.x = 0
         player.rotation = 0
     }
+    //spawmar mais inimigos
+    if(frames % randomInterval == 0) {
+        grids.push(new Grid())
+        randomInterval = Math.floor((Math.random() * 500) + 500)
+        frames = 0
+    }
+    frames++
 }
 
 animate()
