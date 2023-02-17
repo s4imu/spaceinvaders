@@ -1,8 +1,23 @@
 <style>
+    @font-face {
+        font-family: 'Game';
+        src: url('./RussoOne-Regular.ttf') format('truetype');
+    }
     body {
         margin: 0px;
     }
+    p {
+        position: fixed;
+        z-index: 10;
+        color: white;
+        left: 12px;
+        top: 12px;
+        margin: 0;
+        font-family: 'Game', sans-serif;
+        color: lawngreen;
+        font-size: 16px;
+    }
 </style>
-
+<p><span>Score:</span> <span id="scoreEl">0</span></p>
 <canvas></canvas>
 ,<script src="./index.js"></script>

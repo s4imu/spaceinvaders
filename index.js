@@ -1,3 +1,4 @@
+const scoreEl = document.querySelector('#scoreEl') 
 const canvas = document.querySelector('canvas') //Selecionando a area em que eu vou trabalhar
 const c = canvas.getContext('2d')
 
@@ -256,6 +257,7 @@ let game = {
     over: false,
     active: true
 }
+let score = 0
 for(let i = 0; i < 100; i++) {
     particles.push(new Particle(
     {
@@ -380,6 +382,8 @@ function animate(){
                         //removendo invader e projeteis
                         if(invaderFound && projectileFound){
                             //EFEITO DE EXPLOSÃO
+                            score += 100
+                            scoreEl.innerHTML = score
                             createParticles({
                                 object: invader,
                                 fades: true
