@@ -3,8 +3,8 @@ const canvas = document.querySelector('canvas') //Selecionando a area em que eu 
 const c = canvas.getContext('2d')
 
 //definindo as margens da tela
-canvas.width = innerWidth
-canvas.height = innerHeight
+canvas.width = 1024
+canvas.height = 576
 
 //criando o player
 class Player {
